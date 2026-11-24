@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="漫剧制作等级趣味测试：16 道情景题，测测你的剧本、分镜、美术与后期段位。">
+<title>漫剧制作等级趣味测试 · 分镜工作台</title>
+<style>
+  :root{
+    --paper:#F6F2E9;
+    --paper-2:#FFFDF7;
+    --ink:#1A1A1F;
+    --ink-2:#55555F;
+    --ink-3:#85858F;
+    --line:#1A1A1F;
+    --accent:#D93449;
+    --accent-soft:#FCE7EA;
+    --cyan:#1B6B7D;
+    --cyan-soft:#E1F0F2;
+    --gold:#A9700B;
+    --gold-soft:#F7EBCF;
+    --shadow:4px 4px 0 var(--line);
+    --radius:6px;
+    --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);
+    font-size:16px;line-height:1.75;letter-spacing:.01em;
+    overflow-x:hidden;
+  }
+  .grain{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:radial-gradient(rgba(26,26,31,.06) 1px,transparent 1px);
+    background-size:9px 9px;
+  }
+  .wrap{width:min(calc(100% - 32px),1080px);margin-inline:auto;position:relative;z-index:1}
+  :focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+  ::selection{background:var(--accent);color:#fff}
+
+  /* ---------- header / footer ---------- */
+  .site-head{border-bottom:2px solid var(--line);background:var(--paper-2)}
+  .head-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:62px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;letter-spacing:.04em}
+  .brand svg{width:30px;height:30px;flex:none}
+  .head-tag{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--ink-2);border:2px solid var(--line);padding:4px 9px;background:var(--paper);white-space:nowrap}
+  .site-foot{border-top:2px solid var(--line);margin-top:64px;background:var(--paper-2)}
+  .foot-inner{padding:22px 0 30px;font-size:12.5px;color:var(--ink-2);line-height:1.9}
+  .foot-inner p{margin:0 0 4px}
+  .foot-inner .foot-title{font-weight:800;color:var(--ink);letter-spacing:.06em;margin-bottom:8px}
+
+  /* ---------- shared ---------- */
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--accent)}
+  .view{display:block;animation:rise .28s ease both}
+  .view[hidden]{display:none!important}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .section-label{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--ink-2);margin:0 0 10px}
+  .card{border:2px solid var(--line);background:var(--paper-2);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:48px;padding:11px 22px;border:2px solid var(--line);border-radius:var(--radius);
+    background:var(--paper-2);color:var(--ink);font-family:inherit;font-size:15px;font-weight:800;
+    letter-spacing:.03em;cursor:pointer;box-shadow:var(--shadow);
+    transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
+  }
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--line)}
+  .btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--line)}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:#C42C40}
+  .btn-ghost{background:transparent;box-shadow:none}
+  .btn-ghost:hover{box-shadow:var(--shadow)}
+  .btn.is-blocked,.btn:disabled{opacity:.48;cursor:not-allowed;box-shadow:none;transform:none;filter:grayscale(.35)}
+  .btn.is-blocked:hover,.btn:disabled:hover{transform:none;box-shadow:none}
+  .btn-sm{min-height:44px;padding:9px 16px;font-size:14px}
+
+  /* ---------- intro ---------- */
+  .intro{padding:48px 0 8px}
+  .intro-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
+  @media(min-width:900px){.intro{padding:72px 0 12px}.intro-grid{grid-template-columns:1.04fr .96fr;gap:56px}}
+  .hero-title{margin:16px 0 18px;font-size:clamp(38px,7.4vw,66px);line-height:1.12;font-weight:900;letter-spacing:-.025em}
+  .hero-title .hl{color:var(--accent);position:relative;z-index:0;white-space:nowrap}
+  .hero-title .hl::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:7px;background:var(--accent-soft);z-index:-1}
+  .hero-desc{margin:0 0 26px;font-size:16px;color:var(--ink-2);max-width:34em}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+  .meta{border:2px solid var(--line);background:var(--paper-2);padding:8px 13px;font-size:13px;font-weight:700;box-shadow:3px 3px 0 var(--line)}
+  .meta b{font-size:17px;margin-right:5px}
+  .dim-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px}
+  .chip{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--line);border-radius:100px;padding:5px 12px 5px 6px;font-size:12.5px;font-weight:700;background:var(--paper-2)}
+  .chip i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-style:normal;font-size:10px;font-weight:800}
+  .chip:nth-child(2) i{background:var(--cyan)}
+  .chip:nth-child(3) i{background:var(--gold)}
+  .chip:nth-child(4) i{background:var(--ink-2)}
+  .intro-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  .intro-actions .hint{font-size:12.5px;color:var(--ink-3)}
+  .style-note{margin-top:30px;border-left:4px solid var(--accent);padding:6px 0 6px 14px;font-size:12.5px;color:var(--ink-2);line-height:1.8}
+  .style-note b{color:var(--ink)}
+  .disclaimer{margin-top:14px;font-size:12px;color:var(--ink-3);line-height:1.8}
+  .art-frame{border:2px solid var(--line);background:var(--paper-2);box-shadow:var(--shadow);border-radius:var(--radius);padding:14px}
+  .art-frame svg{display:block;width:100%;height:auto}
+  .art-cap{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--ink-2)}
+
+  /* ---------- quiz ---------- */
+  .quiz{padding:32px 0 8px}
+  .quiz-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .quiz-top h2{margin:0;font-size:20px;font-weight:900;letter-spacing:.02em}
+  .quiz-count{font-size:13px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+  .progress{height:14px;border:2px solid var(--line);background:var(--paper-2);border-radius:2px;overflow:hidden;margin-bottom:8px}
+  .progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .28s ease}
+  .progress-sub{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-2);letter-spacing:.06em;margin-bottom:24px}
+  .answer-sheet{border:2px solid var(--line);background:var(--paper-2);padding:12px;margin-bottom:20px}
+  .answer-sheet .sheet-head{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:800;letter-spacing:.1em;color:var(--ink-2);margin-bottom:10px}
+  .dots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  @media(min-width:700px){.dots{grid-template-columns:repeat(8,1fr)}}
+  .dot{min-height:44px;border:2px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:background .15s,transform .15s}
+  .dot:hover{transform:translateY(-2px)}
+  .dot.done{background:var(--cyan-soft)}
+  .dot.current{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .dot.miss{border-color:var(--accent);color:var(--accent)}
+  .q-card{border:2px solid var(--line);background:var(--paper-2);box-shadow:var(--shadow);border-radius:var(--radius);padding:24px 22px}
+  .q-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .q-dim{font-size:11px;font-weight:800;letter-spacing:.1em;padding:4px 10px;border:2px solid var(--line);background:var(--paper)}
+  .q-no{font-size:12px;font-weight:800;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .q-stem{margin:0 0 20px;font-size:clamp(18px,2.6vw,22px);line-height:1.6;font-weight:800;letter-spacing:.005em}
+  .opts{display:grid;gap:10px}
+  .opt{display:flex;align-items:flex-start;gap:13px;width:100%;min-height:56px;padding:13px 15px;text-align:left;border:2px solid var(--line);border-radius:var(--radius);background:var(--paper-2);color:var(--ink);font-family:inherit;font-size:15px;line-height:1.6;cursor:pointer;transition:transform .15s ease,border-color .15s ease,background .15s ease,box-shadow .15s ease}
+  .opt:hover{border-color:var(--accent);transform:translateX(3px)}
+  .opt:disabled{opacity:.5;cursor:not-allowed;transform:none;border-color:var(--line)}
+  .opt .key{flex:none;display:grid;place-items:center;width:28px;height:28px;border:2px solid var(--line);border-radius:3px;background:var(--paper);font-size:12px;font-weight:900}
+  .opt.selected{background:var(--accent-soft);border-color:var(--accent);box-shadow:var(--shadow)}
+  .opt.selected .key{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:22px}
+  .q-foot .tip{font-size:12px;color:var(--ink-3)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);z-index:20;background:var(--ink);color:#fff;border:2px solid var(--line);box-shadow:var(--shadow);padding:11px 18px;font-size:14px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px);text-align:center}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ---------- result ---------- */
+  .result{padding:32px 0 8px}
+  .result-hero{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;border:2px solid var(--line);background:var(--paper-2);box-shadow:var(--shadow);border-radius:var(--radius);padding:26px 22px;margin-bottom:20px}
+  @media(min-width:700px){.result-hero{grid-template-columns:150px 1fr 130px;gap:28px;padding:30px}}
+  .badge{width:120px;height:120px;margin-inline:auto}
+  @media(min-width:700px){.badge{width:140px;height:140px}}
+  .badge svg{display:block;width:100%;height:100%}
+  .lv-tag{font-size:12px;font-weight:900;letter-spacing:.16em;color:var(--accent)}
+  .lv-name{margin:6px 0 8px;font-size:clamp(28px,5vw,40px);line-height:1.2;font-weight:900;letter-spacing:-.02em}
+  .lv-sub{margin:0;font-size:14px;color:var(--ink-2)}
+  .score-box{text-align:center;border:2px solid var(--line);background:var(--paper);padding:12px}
+  .score-box .num{display:block;font-size:clamp(38px,6vw,52px);line-height:1;font-weight:900;font-variant-numeric:tabular-nums;color:var(--accent)}
+  .score-box .unit{font-size:12px;font-weight:800;color:var(--ink-2);letter-spacing:.08em}
+  .score-box .sub{display:block;margin-top:8px;font-size:11.5px;color:var(--ink-2)}
+  .result-grid{display:grid;grid-template-columns:1fr;gap:20px}
+  @media(min-width:900px){.result-grid{grid-template-columns:1fr 1fr;align-items:start}}
+  .panel{border:2px solid var(--line);background:var(--paper-2);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px}
+  .panel + .panel{margin-top:20px}
+  @media(min-width:900px){.panel + .panel{margin-top:0}}
+  .panel h3{margin:0 0 16px;font-size:17px;font-weight:900;letter-spacing:.02em;display:flex;align-items:center;gap:9px}
+  .panel h3::before{content:"";width:8px;height:18px;background:var(--accent);flex:none}
+  .dim-row{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin-bottom:14px}
+  .dim-row:last-child{margin-bottom:0}
+  .dim-row .name{font-size:13.5px;font-weight:800}
+  .dim-row .val{font-size:13px;font-weight:800;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .bar{grid-column:1/-1;height:12px;border:2px solid var(--line);background:var(--paper);overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--ink);transition:width .5s ease}
+  .bar.d0 i{background:var(--accent)}
+  .bar.d1 i{background:var(--cyan)}
+  .bar.d2 i{background:var(--gold)}
+  .bar.d3 i{background:var(--ink-2)}
+  .explain{margin:0;font-size:14.5px;line-height:1.9;color:var(--ink-2)}
+  .explain strong{color:var(--ink)}
+  .advice{margin:0;padding-left:0;list-style:none;counter-reset:adv}
+  .advice li{counter-increment:adv;position:relative;padding:0 0 0 36px;margin-bottom:12px;font-size:14px;line-height:1.8}
+  .advice li:last-child{margin-bottom:0}
+  .advice li::before{content:counter(adv,decimal-leading-zero);position:absolute;left:0;top:1px;display:grid;place-items:center;width:25px;height:25px;border:2px solid var(--line);background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:900}
+  .stat-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .stat{border:2px solid var(--line);padding:6px 11px;font-size:12px;font-weight:800;background:var(--paper)}
+  .stat.ok{background:var(--cyan-soft)}
+  .stat.part{background:var(--gold-soft)}
+  .stat.bad{background:var(--accent-soft);color:#9B1F30}
+  details.rules{border:2px solid var(--line);background:var(--paper-2);box-shadow:var(--shadow);border-radius:var(--radius);padding:0;margin-top:20px}
+  details.rules summary{cursor:pointer;list-style:none;padding:16px 20px;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px}
+  details.rules summary::-webkit-details-marker{display:none}
+  details.rules summary::after{content:"＋";font-size:18px;color:var(--accent)}
+  details.rules[open] summary::after{content:"－"}
+  details.rules .body{padding:0 20px 20px;border-top:2px solid var(--line);font-size:13.5px;line-height:1.95;color:var(--ink-2)}
+  details.rules .body p{margin:14px 0 0}
+  details.rules .body b{color:var(--ink)}
+  .thr{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .thr span{border:2px solid var(--line);padding:3px 8px;font-size:12px;font-weight:800;background:var(--paper)}
+  .review-list{list-style:none;margin:0;padding:0}
+  .review-item{border:2px solid var(--line);background:var(--paper-2);padding:14px 16px;margin-top:12px}
+  .review-item.is-wrong{border-left:7px solid var(--accent)}
+  .review-item.is-part{border-left:7px solid var(--gold)}
+  .review-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px}
+  .review-head .no{font-size:12px;font-weight:900;letter-spacing:.08em}
+  .review-head .dim{font-size:11px;font-weight:700;color:var(--ink-2);border:1px solid var(--line);padding:2px 7px}
+  .review-head .mark{margin-left:auto;font-size:11px;font-weight:900;padding:2px 8px;border:2px solid var(--line)}
+  .review-item.is-wrong .mark{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .review-item.is-part .mark{background:var(--gold-soft)}
+  .review-item:not(.is-wrong):not(.is-part) .mark{background:var(--cyan-soft)}
+  .review-stem{margin:0 0 8px;font-size:14px;font-weight:800;line-height:1.65}
+  .review-line{margin:0 0 4px;font-size:13px;color:var(--ink-2);line-height:1.75}
+  .review-line b{color:var(--ink)}
+  .review-ex{margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-2);line-height:1.8}
+  .result-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  @media(min-width:1200px){.wrap{width:min(calc(100% - 48px),1120px)}body{font-size:16.5px}}
+  @media(max-width:480px){
+    .card,.panel,.q-card{padding:18px 16px}
+    .result-actions .btn{flex:1 1 100%}
+  }
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" role="img" aria-label="分镜板图标"><title>分镜板图标</title>
+        <rect x="2" y="4" width="28" height="24" fill="#FFFDF7" stroke="#1A1A1F" stroke-width="2"/>
+        <path d="M2 12h28M16 12v16" stroke="#1A1A1F" stroke-width="2"/>
+        <path d="M5 7h6M5 9h4" stroke="#D93449" stroke-width="2"/>
+        <path d="M20 16h8v8h-8z" fill="#D93449" stroke="#1A1A1F" stroke-width="1.5"/>
+      </svg>
+      <span>分镜工作台 <span style="color:#85858F;font-weight:600">/ STORYBOARD LAB</span></span>
+    </div>
+    <span class="head-tag">VOL.01 · 能力自测</span>
+  </div>
+</header>
+
+<main class="wrap" id="app">
+
+  <!-- ============ 首页 ============ -->
+  <section class="view intro" id="view-intro">
+    <div class="intro-grid">
+      <div>
+        <span class="eyebrow">趣味知识自测 · 有标准答案</span>
+        <h1 class="hero-title">漫剧制作<br><span class="hl">等级</span>测试</h1>
+        <p class="hero-desc">从剧本钩子、分镜镜头、角色美术到后期交付，16 道真实制作情景题，测出你的漫剧制作段位。每题有明确标准答案，交卷即出等级、维度分布与逐题解析。</p>
+        <div class="meta-row">
+          <span class="meta"><b>16</b>道题</span>
+          <span class="meta"><b>≈5</b>分钟</span>
+          <span class="meta"><b>5</b>个等级</span>
+          <span class="meta"><b>4</b>项维度</span>
+        </div>
+        <div class="dim-chips" aria-label="测评维度">
+          <span class="chip"><i>01</i>剧本与叙事</span>
+          <span class="chip"><i>02</i>分镜与镜头</span>
+          <span class="chip"><i>03</i>视觉与美术</span>
+          <span class="chip"><i>04</i>后期与交付</span>
+        </div>
+        <div class="intro-actions">
+          <button class="btn btn-primary" id="start-btn" type="button">开始分镜 <span aria-hidden="true">▸</span></button>
+          <span class="hint">无需登录 · 不收集任何信息 · 可随时返回改答案</span>
+        </div>
+        <div class="style-note"><b>本主题风格推导：</b>漫剧 = 分镜格 × 赛璐璐色块 × 镜头编号 → 原稿纸感底色、硬描边分镜框、品红标注色与网点纹理，全站按「一格一信息」的漫画语法排版。</div>
+        <p class="disclaimer">本测试为趣味知识自测，结果仅用于学习参考，不代表任何专业资格认证；不设登录、支付与数据上报。</p>
+      </div>
+      <div class="art-frame">
+        <svg viewBox="0 0 420 400" role="img" aria-labelledby="artTitle artDesc">
+          <title id="artTitle">漫剧分镜板插画</title>
+          <desc id="artDesc">一张三格分镜板，含人物特写、对话气泡、场景格、场记板与镜头编号标注</desc>
+          <rect x="0" y="0" width="420" height="400" fill="#FFFDF7"/>
+          <defs>
+            <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.1" fill="#1A1A1F" opacity=".16"/>
+            </pattern>
+          </defs>
+          <rect x="0" y="0" width="420" height="400" fill="url(#dots)"/>
+          <!-- board -->
+          <rect x="18" y="22" width="384" height="326" fill="#F6F2E9" stroke="#1A1A1F" stroke-width="3"/>
+          <rect x="32" y="36" width="356" height="36" fill="#1A1A1F"/>
+          <text x="46" y="60" fill="#FFFDF7" font-family="sans-serif" font-size="14" font-weight="700" letter-spacing="2">STORYBOARD / CUT 01—03</text>
+          <!-- cell 1 -->
+          <rect x="32" y="84" width="212" height="140" fill="#FFFDF7" stroke="#1A1A1F" stroke-width="2.5"/>
+          <circle cx="138" cy="142" r="34" fill="#F6F2E9" stroke="#1A1A1F" stroke-width="2"/>
+          <path d="M118 140q6-7 12 0M146 140q6-7 12 0" stroke="#1A1A1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M126 160q12 8 24 0" stroke="#D93449" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M96 224v-30q0-18 42-18t42 18v30" fill="#1A1A1F"/>
+          <rect x="32" y="84" width="46" height="22" fill="#D93449"/>
+          <text x="40" y="100" fill="#FFFDF7" font-family="sans-serif" font-size="11" font-weight="700">CUT 01</text>
+          <!-- cell 2 -->
+          <rect x="256" y="84" width="132" height="140" fill="#E1F0F2" stroke="#1A1A1F" stroke-width="2.5"/>
+          <path d="M256 190l34-40 26 30 30-44 42 54v34H256z" fill="#1B6B7D" opacity=".85"/>
+          <circle cx="352" cy="112" r="15" fill="#F7EBCF" stroke="#1A1A1F" stroke-width="2"/>
+          <rect x="256" y="84" width="46" height="22" fill="#1B6B7D"/>
+          <text x="264" y="100" fill="#FFFDF7" font-family="sans-serif" font-size="11" font-weight="700">CUT 02</text>
+          <!-- speech bubble -->
+          <path d="M60 246h150v44H96l-16 16v-16H60z" fill="#FFFDF7" stroke="#1A1A1F" stroke-width="2.5"/>
+          <text x="76" y="274" fill="#1A1A1F" font-family="sans-serif" font-size="15" font-weight="700">「这一格，情绪要落在特写。」</text>
+          <!-- cell 3 -->
+          <rect x="230" y="242" width="158" height="92" fill="#FCE7EA" stroke="#1A1A1F" stroke-width="2.5"/>
+          <path d="M244 316h130" stroke="#1A1A1F" stroke-width="2"/>
+          <rect x="262" y="266" width="42" height="50" fill="#D93449" stroke="#1A1A1F" stroke-width="2"/>
+          <rect x="316" y="278" width="42" height="38" fill="#FFFDF7" stroke="#1A1A1F" stroke-width="2"/>
+          <rect x="230" y="242" width="46" height="22" fill="#D93449"/>
+          <text x="238" y="258" fill="#FFFDF7" font-family="sans-serif" font-size="11" font-weight="700">CUT 03</text>
+          <!-- clapper -->
+          <g transform="translate(268,346)">
+            <rect x="0" y="18" width="120" height="34" fill="#1A1A1F"/>
+            <rect x="0" y="4" width="120" height="16" fill="#1A1A1F" transform="rotate(-8 0 20)"/>
+            <path d="M12 4l16 16M40 4l16 16M68 4l16 16M96 4l16 16" stroke="#FFFDF7" stroke-width="4" transform="rotate(-8 0 20)"/>
+            <text x="10" y="41" fill="#FFFDF7" font-family="sans-serif" font-size="11" font-weight="700" letter-spacing="1">MANJU · LEVEL TEST</text>
+          </g>
+          <text x="24" y="382" fill="#1A1A1F" font-family="sans-serif" font-size="11" font-weight="700" letter-spacing="1">SCENE 01 / 16 CUTS / 9:16</text>
+        </svg>
+        <div class="art-cap"><span>FIG.01 — 一格一信息</span><span>9:16 / 25FPS</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 答题页 ============ -->
+  <section class="view quiz" id="view-quiz" hidden>
+    <div class="quiz-top">
+      <h2>制作现场 · 逐格作答</h2>
+      <span class="quiz-count" id="quiz-count">第 01 / 16 格</span>
+    </div>
+    <div class="progress" role="progressbar" aria-label="答题进度" aria-valuemin="0" aria-valuemax="16" aria-valuenow="1" id="progress"><i id="progress-fill"></i></div>
+    <div class="progress-sub"><span id="progress-pos">进度 1 / 16</span><span id="progress-done">已答 0 题</span></div>
+
+    <div class="answer-sheet">
+      <div class="sheet-head"><span>答题卡 / ANSWER SHEET</span><span id="sheet-count">0 / 16</span></div>
+      <div class="dots" id="dots"></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-head"><span class="q-dim" id="q-dim">维度</span><span class="q-no" id="q-no">Q01</span></div>
+      <p class="q-stem" id="q-stem"></p>
+      <div class="opts" id="opts" role="group" aria-label="选项"></div>
+    </div>
+
+    <div class="q-foot">
+      <button class="btn btn-ghost btn-sm" id="prev-btn" type="button"><span aria-hidden="true">←</span> 上一格</button>
+      <span class="tip">选中后可随时改选；答题卡可跳题</span>
+      <button class="btn btn-primary btn-sm" id="next-btn" type="button">下一格 <span aria-hidden="true">→</span></button>
+    </div>
+  </section>
+
+  <!-- ============ 结果页 ============ -->
+  <section class="view result" id="view-result" hidden>
+    <div class="result-hero">
+      <div class="badge">
+        <svg viewBox="0 0 140 140" role="img" aria-label="等级徽章"><title>等级徽章</title>
+          <circle cx="70" cy="70" r="64" fill="#FCE7EA" stroke="#1A1A1F" stroke-width="3"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#D93449" stroke-width="2" stroke-dasharray="5 5"/>
+          <path d="M70 24l8 18 20 2-15 13 4 20-17-10-17 10 4-20-15-13 20-2z" fill="#D93449" stroke="#1A1A1F" stroke-width="2"/>
+          <text x="70" y="90" text-anchor="middle" fill="#1A1A1F" font-family="sans-serif" font-size="22" font-weight="900" id="badge-lv">LV.1</text>
+          <text x="70" y="110" text-anchor="middle" fill="#55555F" font-family="sans-serif" font-size="9" font-weight="700" letter-spacing="1.5">DIRECTOR GRADE</text>
+        </svg>
+      </div>
+      <div>
+        <div class="lv-tag" id="lv-tag">LEVEL 01 · 段位判定</div>
+        <h1 class="lv-name" id="lv-name">观剧萌新</h1>
+        <p class="lv-sub" id="lv-sub"></p>
+      </div>
+      <div class="score-box">
+        <span class="num" id="score-num">0</span>
+        <span class="unit">/ 100 分</span>
+        <span class="sub" id="score-sub">原始分 0 / 32</span>
+      </div>
+    </div>
+
+    <div class="result-grid">
+      <div>
+        <div class="panel">
+          <h3>四维得分分布</h3>
+          <div id="dim-bars"></div>
+        </div>
+        <div class="panel">
+          <h3>这个段位意味着什么</h3>
+          <p class="explain" id="explain"></p>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>下一步可以这样做</h3>
+          <ol class="advice" id="advice"></ol>
+        </div>
+        <div class="panel" style="margin-top:20px">
+          <h3>本次答题统计</h3>
+          <div class="stat-row" id="stats"></div>
+          <p class="explain" id="stat-note"></p>
+        </div>
+      </div>
+    </div>
+
+    <details class="rules" id="rules-details">
+      <summary>计分规则与结果如何得出</summary>
+      <div class="body">
+        <p>每题 4 个选项，按「选项 → 分值」计分：<b>标准答案 2 分、部分正确 1 分、其余 0 分</b>。全卷 16 题，满分 32 分；总分换算为百分制 = <b>总分 ÷ 32 × 100（四舍五入）</b>。</p>
+        <p>四个维度各 4 题、各 8 分，维度得分 = 该维度 4 题得分之和 ÷ 8 × 100（四舍五入）。等级按百分制阈值判定：</p>
+        <div class="thr" id="thresholds"></div>
+        <p>结果完全由当前 16 个答案经纯函数确定性推导，<b>不随机、不写死</b>；返回修改任一答案后，总分、维度、等级、建议与逐题解析会全部重算。部分正确（1 分）代表方向对但不完整，逐题解析中单独标出。</p>
+      </div>
+    </details>
+
+    <details class="rules" id="review-details">
+      <summary>逐题判定与错题解析（16 题）</summary>
+      <div class="body">
+        <div class="stat-row" id="review-legend" style="margin-top:14px"></div>
+        <ul class="review-list" id="review-list"></ul>
+      </div>
+    </details>
+
+    <div class="result-actions">
+      <button class="btn btn-primary" id="restart-btn" type="button">重新测试 <span aria-hidden="true">↺</span></button>
+      <button class="btn" id="revise-btn" type="button">返回修改答案 <span aria-hidden="true">✎</span></button>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <p class="foot-title">分镜工作台 · 漫剧制作等级趣味测试</p>
+    <p>趣味知识自测，结果仅用于学习参考，不构成专业资格或心理评估结论。</p>
+    <p>纯静态单文件页面：无登录、无支付、无统计、无数据上报、无外部依赖，所有计算均在本地浏览器完成。</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ===================== 数据对象（题目 / 选项 / 分值 / 结果文案） ===================== */
+  const DIMS = [
+    {key:'script', name:'剧本与叙事', code:'01'},
+    {key:'board',  name:'分镜与镜头', code:'02'},
+    {key:'art',    name:'视觉与美术', code:'03'},
+    {key:'post',   name:'后期与交付', code:'04'}
+  ];
+
+  const QUESTIONS = [
+    {dim:'script', stem:'一条 15 秒的漫剧短视频，剧本最应该优先保证什么？', options:[
+      {t:'用旁白把世界观、人物关系和前史先交代清楚', s:0},
+      {t:'前 2 秒给出画面钩子，结尾留一个明确的情绪落点', s:2},
+      {t:'把主线剧情压缩成一句字幕，开头直接讲完', s:1},
+      {t:'先放 3 秒片头 LOGO 和制作名单再进正片', s:0}
+    ], explain:'竖屏短剧前 2 秒决定留存。15 秒容不下完整前史，最小叙事单元是「钩子 + 情绪落点」，世界观靠画面暗示。C 有信息但缺钩子，故计 1 分。'},
+
+    {dim:'script', stem:'写漫剧台词时，下列哪一条最符合「画面能演就不写」？', options:[
+      {t:'「你迟到了二十分钟，我现在很生气。」', s:0},
+      {t:'画面：攥紧的拳头、被摔在桌上的杯子；无台词，只留一声吸气', s:2},
+      {t:'「我现在的情绪是愤怒，程度大概七分。」', s:0},
+      {t:'用旁白把角色此刻的内心活动完整念一遍', s:1}
+    ], explain:'情绪交给表演与音效，台词只补画面给不出的信息。D 用旁白能传达内心，但仍属冗余，计 1 分；A、C 是把可演的内容直接说出来。'},
+
+    {dim:'script', stem:'一集 3 分钟的漫剧，哪种节奏结构更稳？', options:[
+      {t:'平铺直叙，每 30 秒分配等量的信息', s:0},
+      {t:'开场钩子 → 中段推进或受阻 → 结尾悬念或反转', s:2},
+      {t:'前 2 分 50 秒铺垫，最后 10 秒集中爆发', s:1},
+      {t:'全程高密度反转，不留任何呼吸点', s:0}
+    ], explain:'钩子—推进—落点是短剧最小闭环。C 知道要有爆发点，但铺垫过长会掉留存，计 1 分；D 无呼吸点反而让反转失效。'},
+
+    {dim:'script', stem:'连续两格分镜之间，判断「要不要加一格过渡」的依据是？', options:[
+      {t:'前后两格在时间、空间或动作上出现了观众无法自行补全的跳跃', s:2},
+      {t:'前一格画得不够精细，需要补一格撑场面', s:0},
+      {t:'想让这一页的格子数凑成偶数', s:0},
+      {t:'角色情绪还在延续，就补一格表情特写', s:1}
+    ], explain:'过渡格只负责填补因果与时空断层，不是装饰。D 有「情绪连贯」意识，但那不是判断依据，计 1 分。'},
+
+    {dim:'board', stem:'表现「角色突然意识到真相」，哪组镜头最直接？', options:[
+      {t:'大远景 → 大远景，保持环境完整', s:0},
+      {t:'中景平视 → 眼部大特写，并定格一拍', s:2},
+      {t:'全景俯拍 → 全景俯拍，靠字幕说明', s:0},
+      {t:'不加镜头变化，只加一行字幕「他明白了」', s:1}
+    ], explain:'景别收紧到特写 + 停顿一拍，是「意识到」的通用镜头语法。D 能传达信息但把活儿交给了字幕，计 1 分。'},
+
+    {dim:'board', stem:'分镜稿上标注「PAN 左→右 / 2s」指的是什么？', options:[
+      {t:'角色从画面左侧走到右侧，用时 2 秒', s:0},
+      {t:'摄影机水平摇镜，2 秒内从左侧扫到右侧', s:2},
+      {t:'画面整体淡入，持续 2 秒', s:0},
+      {t:'两个镜头在 2 秒内交叉剪辑', s:1}
+    ], explain:'PAN 是摇镜（摄影机运动），与角色走位（ACTION）、淡入（FADE）、切镜（CUT）不同。D 涉及时长与运动方向，但对象错了，计 1 分。'},
+
+    {dim:'board', stem:'竖屏 9:16 漫剧构图，最要紧的一条是？', options:[
+      {t:'主体与关键信息放在画面中段安全区，避开上下平台 UI 遮挡', s:2},
+      {t:'完全照搬横屏电影的三分法构图', s:0},
+      {t:'人物画得越小越好，尽量给背景留空间', s:0},
+      {t:'每格塞满细节，信息密度越高越划算', s:1}
+    ], explain:'竖屏有上下 UI 遮挡且单格可视面积小，主体居中安全区、一格一个信息点。D 有信息量意识但忽略可读性，计 1 分。'},
+
+    {dim:'board', stem:'两个角色正反打对话时，为避免「越轴」造成空间混乱，应当？', options:[
+      {t:'每格随意换机位，跳得越多越有动感', s:0},
+      {t:'机位保持在轴线同一侧，让两人视线方向始终相对', s:2},
+      {t:'让两个角色都看向画面外的同一侧', s:0},
+      {t:'用特写交替即可，不必管位置关系', s:1}
+    ], explain:'180 度轴线保证观众能判断谁在跟谁说话。D 的特写交替是常用做法，但没答到「轴线」这个关键，计 1 分。'},
+
+    {dim:'art', stem:'一套能用于跨镜头产出的角色设定（三视图），至少应包含？', options:[
+      {t:'一张最好看的正式立绘，其余靠画师自由发挥', s:0},
+      {t:'正面、侧面、背面 + 身高比例与配色标注', s:2},
+      {t:'正面立绘 + 一张常用表情包', s:0},
+      {t:'正面与侧面，另附一段大概的色感描述', s:1}
+    ], explain:'三视图是为了换镜头、换画师都不崩型，比例与配色必须锁死。D 缺背面与量化比例，计 1 分。'},
+
+    {dim:'art', stem:'给同一角色区分「情绪强度」，最有效的做法是？', options:[
+      {t:'只改台词，画面完全复用同一张脸', s:0},
+      {t:'调整眉眼、嘴角与肩线姿态，配合阴影或网点密度变化', s:2},
+      {t:'每一格重画一张全新立绘', s:0},
+      {t:'把同一张脸放大或缩小', s:1}
+    ], explain:'情绪靠形变与明暗层次传递，不是缩放，更不是每格重画。D 确实制造了画面变化，但没落到情绪，计 1 分。'},
+
+    {dim:'art', stem:'同一场景要表现白天与夜晚，最省成本又不易穿帮的做法是？', options:[
+      {t:'白天和夜晚各重画一整套场景', s:0},
+      {t:'锁定同一底稿与机位，叠加不同色温、光位和投影层', s:2},
+      {t:'把白天的画面整体调暗，直接当夜景用', s:1},
+      {t:'每格换一个完全不同的角度，看不出是同一场景', s:0}
+    ], explain:'锁机位 + 换光，既省工又保持空间连续。C 方向对但缺光源逻辑（窗光、路灯、投影方向），计 1 分。'},
+
+    {dim:'art', stem:'判断一张漫剧画面「信息层级清楚」的标准是？', options:[
+      {t:'第一眼找到主体，第二眼读到动作，第三眼才注意到背景', s:2},
+      {t:'所有元素的对比度完全一致，谁也不抢谁', s:0},
+      {t:'背景细节比角色更精细，经得起放大', s:0},
+      {t:'每格都加满高光和速度线，重点自然突出', s:1}
+    ], explain:'主次靠对比与留白分配，不是堆特效。D 有「强调」意识但无主次之别，计 1 分。'},
+
+    {dim:'post', stem:'动态漫里让静态图「动起来」，最基础的三种手段是？', options:[
+      {t:'推拉镜头、图层视差、局部循环（如发丝或眨眼）', s:2},
+      {t:'每一帧都重新画一遍', s:0},
+      {t:'只加转场特效，格内画面保持静止', s:0},
+      {t:'只做整张图的平移，不做任何局部运动', s:1}
+    ], explain:'镜头运动 + 视差分层 + 局部循环，是动态漫低成本三板斧。D 的平移属于镜头运动的一种，但不完整，计 1 分。'},
+
+    {dim:'post', stem:'配音与画面对齐时，「口播对不上嘴型」优先怎么修？', options:[
+      {t:'把配音音量整体调小，听不清就不明显了', s:0},
+      {t:'调整音频时间轴或嘴型关键帧，让重音落在张口帧上', s:2},
+      {t:'给角色加个口罩，把嘴遮住', s:0},
+      {t:'直接删掉这段台词', s:1}
+    ], explain:'对齐重音与张口帧，优先保住内容。D 能消除不同步但损失了信息，计 1 分。'},
+
+    {dim:'post', stem:'导出竖屏漫剧成片，哪组参数最合理？', options:[
+      {t:'1080×1920 / 9:16 / 25 或 30fps / 单集控制在平台时长内', s:2},
+      {t:'1920×1080 / 16:9 / 24fps，电影感优先', s:0},
+      {t:'任意尺寸都行，平台会自动裁切且不影响构图', s:0},
+      {t:'分辨率越高越好，帧率和时长随意', s:1}
+    ], explain:'平台规格先行，自动裁切会切掉主体。D 只答对分辨率，计 1 分。'},
+
+    {dim:'post', stem:'上线前自检清单里，最不该省略的一项是？', options:[
+      {t:'全程静音看一遍，检查画面仍能讲清故事；再查字幕安全区与首帧', s:2},
+      {t:'只看最后一帧够不够好看', s:0},
+      {t:'只检查文件命名是否规范', s:0},
+      {t:'只检查封面图，正片交给平台压缩', s:1}
+    ], explain:'静音可读性、字幕安全区、首帧留存，是上线前三道硬检。D 只覆盖封面，计 1 分。'}
+  ];
+
+  const LEVELS = [
+    {min:0,max:39,lv:'LV.1',name:'观剧萌新',tag:'还在看剧，还没进组',
+     desc:'目前对漫剧制作的判断主要来自「观感」，还没把剧本、分镜、美术、后期拆成四道可单独检查的工序。最容易踩的坑是「把信息全塞进台词」「靠堆特效造重点」——这恰恰是成片最先掉留存的地方。',
+     advice:[
+       '先拆工序：挑一集喜欢的漫剧，按「钩子 / 推进 / 落点」写成三行，再逐格标出景别。',
+       '做一次静音练习：关掉声音看一遍，把看不懂的格子记下来，那就是剧本和分镜没对齐的位置。',
+       '记住三个词并能认出来：安全区、轴线、PAN（摇镜）。先能认，再谈用。',
+       '用一张纸画 3 格分镜讲完一个 15 秒小故事，只准画，不准写台词。'
+     ]},
+    {min:40,max:54,lv:'LV.2',name:'分镜练习生',tag:'会画格，还没连成镜头',
+     desc:'你已经知道分镜要管景别和节奏，但工序之间还容易断：情绪靠台词讲、时段变化靠整体调暗、嘴型对不上就删台词。这些「能用但会漏」的做法，正是练习生与执行导演的分界线。',
+     advice:[
+       '给下一组分镜强制标注三件事：景别、机位、时长（例：PAN 左→右 / 2s），画完逐格念一遍是否连得上。',
+       '把「情绪」从台词里搬到画面：同一句台词做两版，一版靠表情姿态，一版靠旁白，对比留存感。',
+       '整理一份固定检查表：钩子在不在前 2 秒、主体在不在安全区、有没有越轴。',
+       '拿同一场景做白天 / 夜晚两版，只换光、不重画底稿，练空间连续性。'
+     ]},
+    {min:55,max:69,lv:'LV.3',name:'格间执行导演',tag:'单集能落地，还不稳',
+     desc:'一集片子你能从头做到尾，四个维度都没有明显空白，但稳定度靠经验而非标准：遇到赶工就容易省掉过渡格、跳过静音自检、让参数随平台随机裁切。段位再往上，靠的是把经验写成可复用的规范。',
+     advice:[
+       '把踩过的坑写成一份「上线前四检」清单，每集交付前逐项打勾，不靠记忆。',
+       '建立角色与场景资产库：三视图、配色、同场景不同光位分层，减少重复决策。',
+       '给每集做一次数据复盘：把掉留存的时间点回看对应分镜，标注是钩子、节奏还是信息层级问题。',
+       '练「减法」：每格只留一个信息点，删掉不服务钩子和落点的细节。'
+     ]},
+    {min:70,max:84,lv:'LV.4',name:'镜头总控',tag:'全流程可控，缺的是复盘闭环',
+     desc:'剧本、分镜、美术、后期四条线你都能统筹，判断标准答案几乎不成问题。剩下的差距不在知识点，而在「能不能把标准复制给团队」：资产规范、交付规格、以及用成片反馈反推分镜的能力。',
+     advice:[
+       '把你的判断标准文档化：一份分镜标注规范 + 一份交付规格表，交给别人也能复现。',
+       '做 A/B 小样：同一场戏出两版钩子，只用真实完播数据决定留哪版。',
+       '在前期就把后期约束写进分镜（可动图层、安全区、时长），减少返工。',
+       '带一个人过一遍完整流程，能把「为什么」讲清楚，才算真正锁死标准。'
+     ]},
+    {min:85,max:100,lv:'LV.5',name:'番剧总监督',tag:'能定标准，也能带人',
+     desc:'四个维度都接近满分，说明你不是在「答对题」，而是在用一套成体系的制作标准做判断：从 15 秒钩子到跨集资产一致性，从轴线到成片规格，每一处都有可解释的理由。这一档的重点已经从做题转向定标准与带团队。',
+     advice:[
+       '把这套标准沉淀成团队手册：叙事最小单元、分镜标注、资产锁定、上线四检，各配一个正反例。',
+       '建立跨集一致性审查：角色比例、配色、场景光位、片头时长逐集比对。',
+       '用「静音可读 + 首帧留存 + 字幕安全区」三项做上线门禁，不达标不发布。',
+       '定期回看旧片，把新结论回写进规范，让标准随平台变化迭代。'
+     ]}
+  ];
+
+  const DIM_TIPS = {
+    script:'把下一版每场戏压成「钩子 + 阻碍 + 落点」三行，写不出来的那场先删。',
+    board:'下一组分镜强制标注景别、机位与时长，画完逐格检查是否需要过渡格、是否越轴。',
+    art:'先补齐一份角色三视图并锁死比例与配色，再用「换光不换底稿」重画同一场景的两个时段。',
+    post:'建立上线前四检——静音可读、字幕安全区、首帧钩子、成片规格（9:16 / 1080×1920 / 25–30fps）。'
+  };
+
+  const MAX_SCORE = QUESTIONS.length * 2; // 32
+  const DIM_MAX = 8;                       // 每维度 4 题 × 2 分
+
+  /* ===================== 纯函数：由答案数组确定性推导结果 ===================== */
+  function computeResult(answers){
+    const dims = DIMS.map(function(d){
+      let sum = 0;
+      QUESTIONS.forEach(function(q,i){
+        if(q.dim !== d.key) return;
+        const a = answers[i];
+        if(a === null || a === undefined) return; // 未答按 0 分
+        const opt = q.options[a];
+        if(opt) sum += opt.s;
+      });
+      return {key:d.key, name:d.name, code:d.code, score:sum, max:DIM_MAX,
+              percent:Math.round(sum / DIM_MAX * 100)};
+    });
+
+    const total = dims.reduce(function(n,d){return n + d.score;},0);
+    const percent = Math.round(total / MAX_SCORE * 100);
+    const level = LEVELS.find(function(l){return percent >= l.min && percent <= l.max;}) || LEVELS[0];
+
+    let correct = 0, partial = 0, wrong = 0;
+    const review = QUESTIONS.map(function(q,i){
+      const a = answers[i];
+      const opt = (a === null || a === undefined) ? null : q.options[a];
+      const score = opt ? opt.s : 0;
+      if(score === 2) correct++;
+      else if(score === 1) partial++;
+      else wrong++;
+      const ci = q.options.findIndex(function(o){return o.s === 2;});
+      const dim = DIMS.find(function(d){return d.key === q.dim;});
+      return {
+        no:i+1, dimName:dim.name, stem:q.stem,
+        chosenText:opt ? opt.t : '（未作答）',
+        correctText:q.options[ci].t,
+        explain:q.explain, score:score,
+        state: score === 2 ? 'correct' : (score === 1 ? 'part' : 'wrong')
+      };
+    });
+
+    const sorted = dims.slice().sort(function(a,b){return a.percent - b.percent;});
+    const weakest = sorted[0], strongest = sorted[sorted.length-1];
+
+    return {
+      total:total, max:MAX_SCORE, percent:percent, level:level, dims:dims,
+      correct:correct, partial:partial, wrong:wrong, review:review,
+      weakest:weakest, strongest:strongest,
+      advice: level.advice.concat(['【补强 · ' + weakest.name + '】' + DIM_TIPS[weakest.key]])
+    };
+  }
+
+  /* 供本地自检脚本调用（浏览器中无 module，自动跳过；Node 中无 document，自动跳过 DOM 部分） */
+  if(typeof module !== 'undefined' && module.exports){
+    module.exports = {DIMS:DIMS, QUESTIONS:QUESTIONS, LEVELS:LEVELS,
+                      MAX_SCORE:MAX_SCORE, DIM_MAX:DIM_MAX, computeResult:computeResult};
+  }
+  if(typeof document === 'undefined') return;
+
+  /* ===================== 状态机与 DOM ===================== */
+  const N = QUESTIONS.length;
+  let answers = new Array(N).fill(null);
+  let current = 0;
+  let state = 'intro'; // 'intro' | 'quiz' | 'result'
+
+  const $ = function(id){return document.getElementById(id);};
+  const view = {intro:$('view-intro'), quiz:$('view-quiz'), result:$('view-result')};
+  let toastTimer = null;
+
+  function showView(next){
+    state = next;
+    Object.keys(view).forEach(function(k){view[k].hidden = (k !== next);});
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function toast(msg){
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){el.classList.remove('show');}, 2600);
+  }
+
+  function answeredCount(){
+    return answers.filter(function(a){return a !== null;}).length;
+  }
+
+  function renderDots(){
+    const box = $('dots');
+    box.innerHTML = '';
+    for(let i=0;i<N;i++){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'dot' + (answers[i] !== null ? ' done' : '') + (i === current ? ' current' : '');
+      b.textContent = String(i+1).padStart(2,'0');
+      b.setAttribute('aria-label','第 ' + (i+1) + ' 题' + (answers[i] !== null ? '，已答' : '，未答'));
+      if(i === current) b.setAttribute('aria-current','step');
+      b.addEventListener('click', function(){current = i; renderQuiz();});
+      box.appendChild(b);
+    }
+  }
+
+  function renderQuiz(){
+    const q = QUESTIONS[current];
+    const dim = DIMS.find(function(d){return d.key === q.dim;});
+
+    $('quiz-count').textContent = '第 ' + String(current+1).padStart(2,'0') + ' / ' + N + ' 格';
+    $('progress-fill').style.width = ((current+1)/N*100) + '%';
+    $('progress').setAttribute('aria-valuenow', String(current+1));
+    $('progress-pos').textContent = '进度 ' + (current+1) + ' / ' + N;
+    $('progress-done').textContent = '已答 ' + answeredCount() + ' 题';
+    $('sheet-count').textContent = answeredCount() + ' / ' + N;
+    $('q-no').textContent = 'Q' + String(current+1).padStart(2,'0');
+    $('q-dim').textContent = dim.code + ' / ' + dim.name;
+    $('q-stem').textContent = q.stem;
+
+    const box = $('opts');
+    box.innerHTML = '';
+    q.options.forEach(function(o,i){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt' + (answers[current] === i ? ' selected' : '');
+      b.setAttribute('aria-pressed', answers[current] === i ? 'true' : 'false');
+      b.innerHTML = '<span class="key" aria-hidden="true">' + 'ABCD'[i] + '</span><span class="txt"></span>';
+      b.querySelector('.txt').textContent = o.t;
+      b.addEventListener('click', function(){
+        answers[current] = i;
+        renderQuiz();
+      });
+      box.appendChild(b);
+    });
+
+    $('prev-btn').disabled = (current === 0);
+    $('prev-btn').classList.toggle('is-blocked', current === 0);
+    $('prev-btn').setAttribute('aria-disabled', current === 0 ? 'true' : 'false');
+
+    const nb = $('next-btn');
+    const isLast = (current === N-1);
+    nb.innerHTML = isLast ? '出结果 <span aria-hidden="true">▸</span>' : '下一格 <span aria-hidden="true">→</span>';
+    const blocked = answers[current] === null;
+    nb.classList.toggle('is-blocked', blocked);
+    nb.setAttribute('aria-disabled', blocked ? 'true' : 'false');
+    renderDots();
+  }
+
+  function goNext(){
+    if(answers[current] === null){
+      toast('请先选择一项，再进入下一格');
+      return;
+    }
+    if(current < N-1){ current++; renderQuiz(); return; }
+    // 最后一题：未答拦截
+    const miss = answers.findIndex(function(a){return a === null;});
+    if(miss !== -1){
+      const missCount = N - answeredCount();
+      current = miss;
+      renderQuiz();
+      toast('还有 ' + missCount + ' 题未作答，已跳到第 ' + (miss+1) + ' 题');
+      return;
+    }
+    finish();
+  }
+
+  function finish(){
+    const r = computeResult(answers);
+    renderResult(r);
+    showView('result');
+  }
+
+  function renderResult(r){
+    $('badge-lv').textContent = r.level.lv;
+    $('lv-tag').textContent = 'LEVEL ' + r.level.lv.slice(3).padStart(2,'0') + ' · ' + r.level.tag;
+    $('lv-name').textContent = r.level.name;
+    $('lv-sub').textContent = '段位判定：百分制 ' + r.percent + ' 分，落在 ' + r.level.min + '–' + r.level.max + ' 区间。';
+    $('score-num').textContent = String(r.percent);
+    $('score-sub').textContent = '原始分 ' + r.total + ' / ' + r.max;
+
+    // 维度分布
+    const bars = $('dim-bars');
+    bars.innerHTML = '';
+    r.dims.forEach(function(d,i){
+      const row = document.createElement('div');
+      row.className = 'dim-row';
+      row.innerHTML = '<span class="name">' + d.code + ' / ' + d.name + '</span>' +
+                      '<span class="val">' + d.percent + '% <small>(' + d.score + '/' + d.max + ')</small></span>' +
+                      '<span class="bar d' + i + '"><i style="width:' + d.percent + '%"></i></span>';
+      bars.appendChild(row);
+    });
+
+    $('explain').innerHTML = '<strong>' + r.level.desc + '</strong><br><br>本次最稳的是「' +
+      r.strongest.name + '」（' + r.strongest.percent + '%），最需要补的是「' +
+      r.weakest.name + '」（' + r.weakest.percent + '%）。等级由全卷 16 个答案确定性推导，下面附完整计分规则与逐题判定。';
+
+    const adv = $('advice');
+    adv.innerHTML = '';
+    r.advice.forEach(function(t){
+      const li = document.createElement('li');
+      li.textContent = t;
+      adv.appendChild(li);
+    });
+
+    $('stats').innerHTML =
+      '<span class="stat ok">标准答案 ' + r.correct + ' 题</span>' +
+      '<span class="stat part">部分正确 ' + r.partial + ' 题</span>' +
+      '<span class="stat bad">未得分 ' + r.wrong + ' 题</span>' +
+      '<span class="stat">原始分 ' + r.total + ' / ' + r.max + '</span>';
+    $('stat-note').textContent = '「标准答案」= 该题拿到 2 分；「部分正确」= 方向对但不完整，拿到 1 分；「未得分」含答错与未作答（本题已全部作答）。';
+
+    $('thresholds').innerHTML = LEVELS.map(function(l){
+      return '<span>' + l.min + '–' + l.max + ' → ' + l.lv + ' ' + l.name + '</span>';
+    }).join('');
+
+    $('review-legend').innerHTML =
+      '<span class="stat ok">■ 2 分 · 标准答案</span>' +
+      '<span class="stat part">■ 1 分 · 部分正确</span>' +
+      '<span class="stat bad">■ 0 分 · 需复习</span>';
+
+    const list = $('review-list');
+    list.innerHTML = '';
+    r.review.forEach(function(it){
+      const li = document.createElement('li');
+      li.className = 'review-item' + (it.state === 'wrong' ? ' is-wrong' : (it.state === 'part' ? ' is-part' : ''));
+      const mark = it.state === 'correct' ? '答对 · 2 分' : (it.state === 'part' ? '部分正确 · 1 分' : '需复习 · 0 分');
+      li.innerHTML =
+        '<div class="review-head"><span class="no">Q' + String(it.no).padStart(2,'0') + '</span>' +
+        '<span class="dim">' + it.dimName + '</span><span class="mark">' + mark + '</span></div>' +
+        '<p class="review-stem"></p>' +
+        '<p class="review-line"><b>你的选择：</b><span class="c1"></span></p>' +
+        '<p class="review-line"><b>标准答案：</b><span class="c2"></span></p>' +
+        '<p class="review-ex"><b>解析：</b><span class="c3"></span></p>';
+      li.querySelector('.review-stem').textContent = it.stem;
+      li.querySelector('.c1').textContent = it.chosenText;
+      li.querySelector('.c2').textContent = it.correctText;
+      li.querySelector('.c3').textContent = it.explain;
+      list.appendChild(li);
+    });
+  }
+
+  /* ===================== 事件绑定 ===================== */
+  $('start-btn').addEventListener('click', function(){
+    answers = new Array(N).fill(null);
+    current = 0;
+    renderQuiz();
+    showView('quiz');
+  });
+  $('prev-btn').addEventListener('click', function(){
+    if(current > 0){ current--; renderQuiz(); }
+  });
+  $('next-btn').addEventListener('click', goNext);
+  $('restart-btn').addEventListener('click', function(){
+    answers = new Array(N).fill(null);
+    current = 0;
+    renderQuiz();
+    showView('quiz');
+    toast('已清空答案，从第 1 题重新开始');
+  });
+  $('revise-btn').addEventListener('click', function(){
+    current = 0;
+    renderQuiz();
+    showView('quiz');
+    toast('答案已保留，改完任意一题后点「出结果」会全部重算');
+  });
+
+  renderQuiz(); // 初始化（首页隐藏，但保证状态一致）
+})();
+</script>
+</body>
+</html>
